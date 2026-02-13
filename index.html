@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spam Mubie</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body { margin:0; font-family:Arial; background:#f5f5f5; }
+  header, nav, footer { background:#111; color:#fff; text-align:center; padding:15px; }
+  nav a { color:#fff; margin:0 12px; cursor:pointer; font-weight:bold; }
+  nav a:hover { color:#ffcc00; }
+
+  section { display:none; padding:30px; max-width:1000px; margin:auto; }
+  .active { display:block; }
+
+  .hero { background:#ffcc00; padding:60px; text-align:center; }
+
+  .cards {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+  }
+
+  .card {
+    background:#fff;
+    padding:15px;
+    border-radius:8px;
+    box-shadow:0 4px 8px rgba(0,0,0,.1);
+  }
+
+  button {
+    background:#111;
+    color:#fff;
+    border:none;
+    padding:8px;
+    margin-top:10px;
+    cursor:pointer;
+    width:100%;
+  }
+
+  button:hover { background:#333; }
+
+  ul { list-style:none; padding:0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Spam Mubie 🍙</h1>
+  <p>Cart: <span id="cartCount">0</span> items</p>
+</header>
+
+<nav>
+  <a onclick="showPage('home')">Home</a>
+  <a onclick="showPage('menu')">Menu</a>
+  <a onclick="showPage('cart')">Cart</a>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="hero">
+    <h2>Fresh Spam Mubie</h2>
+    <p>Affordable • Filling • Masarap</p>
+    <button onclick="showPage('menu')">View Menu</button>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <h2>Menu (15 Items)</h2>
+  <div class="cards" id="menuItems"></div>
+</section>
+
+<!-- CART -->
+<section id="cart">
+  <h2>Your Cart</h2>
+  <ul id="cartItems"></ul>
+  <h3>Total: ₱<span id="totalPrice">0</span></h3>
+  <button onclick="placeOrder()">Place Order</button>
+</section>
+
+<footer>
+  <p>© 2026 Spam Mubie</p>
+</footer>
+
+<script>
+const products = [
+  {name:"Classic Spam Mubie", price:40},
+  {name:"Spam Mubie w/ Egg", price:50},
+  {name:"Spam Mubie w/ Cheese", price:55},
+  {name:"Sweet & Spicy Spam Mubie", price:55},
+  {name:"Garlic Spam Mubie", price:50},
+  {name:"Spam Mubie Teriyaki", price:50},
+  {name:"Spam Mubie Mayo", price:45},
+  {name:"Spam Mubie Katsu", price:55},
+  {name:"Spam Mubie Longganisa", price:60},
+  {name:"Spam Mubie Bacon", price:65},
+  {name:"Spam Mubie Kimchi", price:60},
+  {name:"Spam Mubie Tuna", price:55},
+  {name:"Spam Mubie Hawaiian", price:60},
+  {name:"Spam Mubie Supreme", price:70},
+  {name:"Spam Mubie Deluxe", price:80}
+];
+
+let cart = [];
+
+function showPage(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function loadMenu(){
+  const menu = document.getElementById("menuItems");
+  products.forEach((p,i)=>{
+    menu.innerHTML += `
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p>₱${p.price}</p>
+        <button onclick="addToCart(${i})">Add to Cart</button>
+      </div>
+    `;
+  });
+}
+
+function addToCart(index){
+  cart.push(products[index]);
+  updateCart();
+  alert("Added to cart!");
+}
+
+function updateCart(){
+  document.getElementById("cartCount").innerText = cart.length;
+  const list = document.getElementById("cartItems");
+  list.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item=>{
+    total += item.price;
+    list.innerHTML += `<li>${item.name} - ₱${item.price}</li>`;
+  });
+
+  document.getElementById("totalPrice").innerText = total;
+}
+
+function placeOrder(){
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
+  alert("✅ Order placed! Total ₱" + document.getElementById("totalPrice").innerText);
+  cart = [];
+  updateCart();
+  showPage('home');
+}
+
+loadMenu();
+</script>
+
+</body>
+</html>
